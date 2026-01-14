@@ -38,8 +38,8 @@ struct MorphingWaveformVoice final : public SynthesiserVoice
         {
             while (--numSamples >= 0)
             {
-                auto wave_a_value = getWaveSample(wave_a, phaseIndex);
-                auto wave_b_value = getWaveSample(wave_b, phaseIndex);
+                auto wave_a_value = getWaveSample(wave_a);
+                auto wave_b_value = getWaveSample(wave_b);
                 auto interpolatedValue = (wave_a_value * (1.0 - wavePosition)) + (wave_b_value * wavePosition);
                 auto levelAdjustedSample = interpolatedValue * level;
                 auto outputLen = outputBuffer.getNumChannels();
@@ -51,11 +51,11 @@ struct MorphingWaveformVoice final : public SynthesiserVoice
         }
     }
 
-    double getWaveSample(int waveform, double input) {
-        return waveform == 0 ? sineValue(input) :
-               waveform == 1 ? squareValue(input) :
-               waveform == 2 ? triangleValue(input) :
-               sawValue(input);
+    double getWaveSample(int waveform) {
+        return waveform == 0 ? sineValue(phaseIndex) :
+               waveform == 1 ? squareValue(phaseIndex) :
+               waveform == 2 ? triangleValue(phaseIndex) :
+               sawValue(phaseIndex);
     }
 
     void updateMorphFunctions(double position) {
