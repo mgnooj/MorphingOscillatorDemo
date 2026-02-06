@@ -33,10 +33,7 @@ struct SynthAudioSource final : public AudioSource
 {
     SynthAudioSource (MidiKeyboardState& keyState)  : keyboardState (keyState)
     {
-        for (auto i = 0; i < 4; ++i)
-        {
-            synth.addVoice (new MorphingWaveformVoice());
-        }
+        synth.addVoice (new MorphingWaveformVoice());
         synth.clearSounds();
         synth.addSound (new MorphingWaveformSound());
     }
@@ -107,14 +104,12 @@ public:
         audioSourcePlayer.setSource (&synthAudioSource);
         
         addAndMakeVisible(waveformBlend);
-        waveformBlend.setRange (0.0, 3.0, 0.03);
+        waveformBlend.setRange (0.0, 2.0, 0.01);
         waveformBlend.setValue(0.0, dontSendNotification);
         waveformBlend.onValueChange = [this]() {
             auto& synth = synthAudioSource.synth;
-            for (auto i = 0; i < synth.getNumVoices(); i++) {
-                MorphingWaveformVoice* voice = static_cast<MorphingWaveformVoice*>(synth.getVoice(i));
-                voice->updateMorphFunctions(waveformBlend.getValue());
-            }
+            MorphingWaveformVoice* voice = static_cast<MorphingWaveformVoice*>(synth.getVoice(0));
+            voice->updateMorphFunctions(waveformBlend.getValue());
         };
         addAndMakeVisible(waveformBlendLabel);
         waveformBlendLabel.setText("Waveform", juce::dontSendNotification);
